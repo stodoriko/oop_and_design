@@ -3,7 +3,8 @@ package ru.netology;
 public class Radio {
 
     private int radioChannelMin = 0;
-    private int radioChannelMax = 9;
+    private int radioChannelMax;
+    private int totalChannel;
     private int currentChannel;
 
     private int volumeMin = 0;
@@ -13,6 +14,14 @@ public class Radio {
     private boolean on;
 
 
+    public Radio() {
+        this.totalChannel = 10;
+        this.radioChannelMax = totalChannel - 1;
+    }
+    public Radio(int totalChannel) {
+        this.totalChannel = totalChannel;
+        this.radioChannelMax = totalChannel - 1;
+    }
 
     public void switchToNextChannel() {
         if (getCurrentChannel() == getRadioChannelMax()) {
@@ -61,7 +70,6 @@ public class Radio {
         return radioChannelMax;
     }
 
-
     public int getCurrentChannel() {
         return currentChannel;
     }
@@ -99,4 +107,5 @@ public class Radio {
     public void setOn(boolean on) {
         this.on = on;
     }
+
 }

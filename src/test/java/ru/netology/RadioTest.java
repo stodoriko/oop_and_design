@@ -7,14 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RadioTest {
 
 
-    //Если текущая радиостанция - 9 и клиент нажал на кнопку next (следующая) на пульте, то текущей должна стать 0-ая;
+    //Если текущая радиостанция максимальная(по умолчанию) и клиент нажал на кнопку next (следующая) на пульте, то текущей должна стать 0-ая;
     // в остальных случаях радио переключается просто на следующую станцию.
     @Test
     public void shouldComeToBeginningIfEqualMax() {
         Radio radio = new Radio();
         radio.setOn(true);
         if (radio.isOn()) {
-            radio.setCurrentChannel(9);
+            radio.setCurrentChannel(radio.getRadioChannelMax());
         }
 
         int expected = radio.getRadioChannelMin();
@@ -24,14 +24,31 @@ public class RadioTest {
         assertEquals(expected, actual);
     }
 
-    //Если текущая радиостанция - меньше 9 и клиент нажал на кнопку next (следующая) на пульте, то текущей должна стать следующая;
+    //Если текущая радиостанция максимальная(указанное в конструкторе) и клиент нажал на кнопку next (следующая) на пульте, то текущей должна стать 0-ая;
+    // в остальных случаях радио переключается просто на следующую станцию.
+    @Test
+    public void shouldComeToBeginningIfEqualMax2() {
+        Radio radio = new Radio(9);
+        radio.setOn(true);
+        if (radio.isOn()) {
+            radio.setCurrentChannel(radio.getRadioChannelMax());
+        }
+
+        int expected = radio.getRadioChannelMin();
+        radio.switchToNextChannel();
+
+        int actual = radio.getCurrentChannel();
+        assertEquals(expected, actual);
+    }
+
+    //Если текущая радиостанция - меньше максимальной и клиент нажал на кнопку next (следующая) на пульте, то текущей должна стать следующая;
     @Test
     public void shouldSwitchForward() {
-        Radio radio = new Radio();
+        Radio radio = new Radio(7);
 
-        radio.setCurrentChannel(8);
+        radio.setCurrentChannel(radio.getRadioChannelMax() - 2);
 
-        int expected = radio.getRadioChannelMax();
+        int expected = radio.getCurrentChannel()+1;
         radio.switchToNextChannel();
 
         int actual = radio.getCurrentChannel();
@@ -43,7 +60,7 @@ public class RadioTest {
     public void shouldNotSwitchIfMoreThanMax() {
         Radio radio = new Radio();
 
-        radio.setCurrentChannel(10);
+        radio.setCurrentChannel(radio.getRadioChannelMax()+1);
 
         int expected = radio.getRadioChannelMax();
         radio.switchToNextChannel();
@@ -59,7 +76,7 @@ public class RadioTest {
     public void shouldComeToEndIfEqualMin() {
         Radio radio = new Radio();
 
-        radio.setCurrentChannel(0);
+        radio.setCurrentChannel(radio.getRadioChannelMin());
 
         int expected = radio.getRadioChannelMax();
         radio.switchToPrevChannel();
@@ -71,9 +88,9 @@ public class RadioTest {
     // Если текущая радиостанция - больше 0 и клиент нажал на кнопку prev (предыдущая) на пульте, то текущей должна стать предыдущая
     @Test
     public void shouldSwitchBack() {
-        Radio radio = new Radio();
+        Radio radio = new Radio(2);
 
-        radio.setCurrentChannel(1);
+        radio.setCurrentChannel(radio.getRadioChannelMax());
 
         int expected = radio.getRadioChannelMin();
         radio.switchToPrevChannel();
@@ -87,7 +104,7 @@ public class RadioTest {
     public void shouldNotSwitchIfLessThanMin() {
         Radio radio = new Radio();
 
-        radio.setCurrentChannel(-1);
+        radio.setCurrentChannel(radio.getRadioChannelMin()-1);
 
         int expected = radio.getRadioChannelMin();
         radio.switchToPrevChannel();
