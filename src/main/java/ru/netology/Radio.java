@@ -99,5 +99,4 @@ public class Radio {
     public void setOn(boolean on) {
         this.on = on;
     }
-
 }
